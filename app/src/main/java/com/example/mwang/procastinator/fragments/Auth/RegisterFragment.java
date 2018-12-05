@@ -11,36 +11,34 @@ import android.widget.TextView;
 
 import com.example.mwang.procastinator.R;
 
-public class LoginFragment extends Fragment {
+public class RegisterFragment extends Fragment {
 
-    LoginFragmentInterface loginFragmentInterface;
-    TextView signUpChanger;
+    RegisterFragmentInterface registerFragmentInterface;
+    TextView signInChanger;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.login_fragment,container,false);
+       return  inflater.inflate(R.layout.register_fragment,container,false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         try {
-            loginFragmentInterface = (LoginFragmentInterface) getActivity();
+            registerFragmentInterface = (RegisterFragmentInterface) getActivity();
         } catch (ClassCastException e) {
             throw new ClassCastException("Activity " + getActivity().toString() + " must implement EnterEmailInterface");
         }
-        signUpChanger=(TextView)view.findViewById(R.id.sign_up_changer);
-        signUpChanger.setOnClickListener(new View.OnClickListener() {
+        signInChanger=(TextView) view.findViewById(R.id.sign_in_changer);
+        signInChanger.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loginFragmentInterface.changePage(1);
+                registerFragmentInterface.changePage(0);
             }
         });
-
     }
 
-    public interface LoginFragmentInterface{
+    public interface RegisterFragmentInterface{
          void changePage(int page);
     }
 }
