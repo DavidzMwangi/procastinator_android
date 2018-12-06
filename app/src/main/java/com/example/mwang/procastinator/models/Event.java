@@ -27,23 +27,23 @@ public class Event {
 
     @ColumnInfo(name = "event_date")
     @SerializedName("event_date")
-    public Date event_date;
+    public String event_date;
 
 
 
     @ColumnInfo(name = "event_time")
     @SerializedName("event_time")
-    public Time event_time;
+    public String event_time;
 
 
     @ColumnInfo(name = "reminder_date")
     @SerializedName("reminder_date")
-    public Date reminder_date;
+    public String reminder_date;
 
 
     @ColumnInfo(name = "reminder_time")
     @SerializedName("reminder_time")
-    public Time reminder_time;
+    public String reminder_time;
 
 
     @ColumnInfo(name = "is_complete")
@@ -51,5 +51,12 @@ public class Event {
     public int is_complete;
 
 
+    @NonNull
+    public int getId() {
+        return id;
+    }
 
+    public void setId(@NonNull int id) {
+        this.id = id;
+    }
 }

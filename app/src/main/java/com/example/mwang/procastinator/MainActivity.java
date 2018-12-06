@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.mwang.procastinator.fragments.home.AllEventsFragment;
 import com.example.mwang.procastinator.models.access.Authorization;
 import com.example.mwang.procastinator.views.EventViewModel;
 
@@ -30,6 +32,8 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+        changeFragment(0);
         eventViewModel=ViewModelProviders.of(this).get(EventViewModel.class);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -120,5 +124,18 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void changeFragment(int page){
+        FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
+        switch (page){
+            case 0:
+                fragmentTransaction.replace(R.id.main_frame,new AllEventsFragment(),"All Events").commit();
+            break;
+
+            case 1:
+
+                break;
+        }
     }
 }
