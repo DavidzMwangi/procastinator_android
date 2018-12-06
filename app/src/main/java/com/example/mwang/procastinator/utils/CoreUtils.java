@@ -17,7 +17,7 @@ public class CoreUtils {
     private static Retrofit auth_retrofit = null;
 
 
-    public static String base_url="http://192.168.100.14/Procastinator/public/api/";
+    public static String base_url="http://192.168.137.1/Procastinator/public/api/";
 
     public static Retrofit getRetrofitClient() {
         if (retrofit == null) {

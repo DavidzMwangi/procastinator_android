@@ -3,6 +3,7 @@ package com.example.mwang.procastinator.repositories;
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.util.Log;
 
 import com.example.mwang.procastinator.dao.AuthorizationDao;
 import com.example.mwang.procastinator.models.access.Authorization;
@@ -34,12 +35,14 @@ public class AuthorizationRepository {
     }
 
 
-    public void attemptRegister(String email,String password,String password_confirmation){
+    public void attemptRegister(String name,String email,String password,String password_confirmation){
         monitor.setValue(new NetworkResponse(true));
-        Call<Authorization> call=CoreUtils.getRetrofitClient().create(AuthService.class).tryRegister(email,password,password_confirmation);
+        Call<Authorization> call=CoreUtils.getRetrofitClient().create(AuthService.class).tryRegister(name,email,password,password_confirmation);
         call.enqueue(new Callback<Authorization>() {
             @Override
             public void onResponse(Call<Authorization> call, Response<Authorization> response) {
+                Log.e("reg","success");
+
                 if(response.code()==422 || response.code()==500){
                     monitor.postValue(new NetworkResponse(false,"Invalid user credentials",response.code()));
                 }else{
@@ -54,6 +57,7 @@ public class AuthorizationRepository {
 
             @Override
             public void onFailure(Call<Authorization> call, Throwable t) {
+                Log.e("reg",t.getMessage());
 
                 try{
                     monitor.postValue(new NetworkResponse(false,"Check your internet connection then try again",((HttpException) t).code()));
@@ -71,6 +75,7 @@ public class AuthorizationRepository {
         call.enqueue(new Callback<Authorization>() {
             @Override
             public void onResponse(Call<Authorization> call, Response<Authorization> response) {
+                Log.e("reg","success");
                 if(response.code()==401){
                     monitor.postValue(new NetworkResponse(false,"Your credentials did not match our records",response.code()));
                 }else if(response.code()==422 || response.code()==500){
@@ -86,6 +91,9 @@ public class AuthorizationRepository {
 
             @Override
             public void onFailure(Call<Authorization> call, Throwable t) {
+
+                Log.e("reg","error");
+
                 try{
                     monitor.postValue(new NetworkResponse(false,"Check your internet connection then try again",((HttpException) t).code()));
                 }catch (Exception e){

@@ -31,8 +31,8 @@ public class AuthorizationViewModel extends AndroidViewModel {
         authorizationRepository.attemptAuth(username,password);
     }
 
-    public void attemptRegister(String email, String password, String password_confirmation){
+    public void attemptRegister(String name,String email, String password, String password_confirmation){
 
-        authorizationRepository.attemptRegister(email,password,password_confirmation);
+        authorizationRepository.attemptRegister(name,email,password,password_confirmation);
     }
 }
