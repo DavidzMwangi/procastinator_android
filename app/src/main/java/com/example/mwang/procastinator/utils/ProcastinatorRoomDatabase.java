@@ -7,14 +7,16 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
 import com.example.mwang.procastinator.dao.AuthorizationDao;
+import com.example.mwang.procastinator.dao.EventsDao;
+import com.example.mwang.procastinator.models.Event;
 import com.example.mwang.procastinator.models.access.Authorization;
 import com.example.mwang.procastinator.models.access.User;
 
-@Database(entities = {Authorization.class,User.class},version = 1)
+@Database(entities = {Authorization.class,User.class,Event.class},version = 1)
 public abstract class ProcastinatorRoomDatabase extends RoomDatabase {
 
     public abstract AuthorizationDao authorizationDao();
-
+    public abstract EventsDao eventsDao();
 
 
     private static ProcastinatorRoomDatabase INSTANCE;
@@ -29,4 +31,6 @@ public abstract class ProcastinatorRoomDatabase extends RoomDatabase {
         }
         return INSTANCE;
     }
+
+
 }

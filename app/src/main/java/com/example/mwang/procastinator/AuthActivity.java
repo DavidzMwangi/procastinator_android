@@ -2,6 +2,7 @@ package com.example.mwang.procastinator;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +31,10 @@ public class AuthActivity extends AppCompatActivity implements LoginFragment.Log
                 if (auth!=null){
                     authorization=auth;
                     //change activity to go main activity
+
+                    Intent intent=new Intent(AuthActivity.this,MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
 
                 }else{
                     changeFragment(0);

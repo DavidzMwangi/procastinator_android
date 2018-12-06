@@ -6,33 +6,31 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
+import com.example.mwang.procastinator.models.Event;
 import com.example.mwang.procastinator.models.access.Authorization;
 import com.example.mwang.procastinator.repositories.AuthorizationRepository;
+import com.example.mwang.procastinator.repositories.EventRepository;
 import com.example.mwang.procastinator.utils.NetworkResponse;
 
-public class AuthorizationViewModel extends AndroidViewModel {
+import java.util.List;
 
-    AuthorizationRepository authorizationRepository;
-    private LiveData<Authorization> mAuth;
+public class EventViewModel  extends AndroidViewModel {
+    private EventRepository eventRepository;
+    private AuthorizationRepository authorizationRepository;
     public MutableLiveData<NetworkResponse> monitor;
-    public AuthorizationViewModel(@NonNull Application application) {
+    public LiveData<List<Event>> eventsList;
+    public LiveData<Authorization> mAuth;
+    public EventViewModel(@NonNull Application application) {
         super(application);
 
+        eventRepository=new EventRepository(application);
         authorizationRepository=new AuthorizationRepository(application);
+        eventsList=eventRepository.allEvents();
         mAuth=authorizationRepository.getAuth();
-        monitor=authorizationRepository.monitor;
     }
 
-    public LiveData<Authorization> getmAuth (){
-        return  mAuth;
-    }
+    public void getEventsOnline(String token){
+        eventRepository.getEventsOnline(token);
 
-    public void attemptLogin(String username,String password){
-        authorizationRepository.attemptAuth(username,password);
-    }
-
-    public void attemptRegister(String name,String email, String password, String password_confirmation){
-
-        authorizationRepository.attemptRegister(name,email,password,password_confirmation);
     }
 }
