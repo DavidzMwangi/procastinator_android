@@ -24,7 +24,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class AllEventsFragment extends Fragment {
+public class InCompleteEventsFragment extends Fragment {
     EventViewModel eventViewModel;
     AllEventsAdapter allEventsAdapter;
     @BindView(R.id.all_events_recycler) RecyclerView allEventsRecycler;
@@ -32,7 +32,7 @@ public class AllEventsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup auth_view = (ViewGroup) inflater.inflate(
-                R.layout.all_events_fragment, container, false
+                R.layout.incomplete_events_fragment, container, false
         );
         ButterKnife.bind(this, auth_view);
         return auth_view;

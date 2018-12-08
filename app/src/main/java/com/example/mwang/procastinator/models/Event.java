@@ -7,8 +7,6 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.sql.Date;
-import java.sql.Time;
 
 
 @Entity(tableName = "events_table")
