@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,7 +68,7 @@ public class InCompleteEventsFragment extends Fragment {
 
     public void updateEventsData(){
 
-        eventViewModel.eventsList.observe(this, new Observer<List<Event>>() {
+        eventViewModel.inCompleteEventsList.observe(this, new Observer<List<Event>>() {
             @Override
             public void onChanged(@Nullable List<Event> events) {
                 if (events!=null){

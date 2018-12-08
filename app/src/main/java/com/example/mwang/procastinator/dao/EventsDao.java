@@ -19,8 +19,10 @@ public interface EventsDao {
     @Query("DELETE FROM events_table")
     void deleteAll();
 
-    @Query("SELECT * from events_table ")
-    LiveData<List<Event>> getAllEvents();
+    @Query("SELECT * from events_table where is_complete = :isComplete")
+    LiveData<List<Event>> getAllEvents(int isComplete);
+
+
 
 
 }

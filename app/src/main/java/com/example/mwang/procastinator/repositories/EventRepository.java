@@ -3,6 +3,7 @@ package com.example.mwang.procastinator.repositories;
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.util.Log;
 
 import com.example.mwang.procastinator.dao.EventsDao;
 import com.example.mwang.procastinator.models.Event;
@@ -19,19 +20,24 @@ import retrofit2.Response;
 
 public class EventRepository {
     EventsDao eventsDao;
-   private LiveData<List<Event>> eventsList;
+   private LiveData<List<Event>> inCompleteEventsList;
+   private LiveData<List<Event>> completeEventsList;
     public MutableLiveData<NetworkResponse> monitor;
     
 
     public EventRepository(Application application){
         ProcastinatorRoomDatabase procastinatorRoomDatabase=ProcastinatorRoomDatabase.getDatabase(application);
         eventsDao=procastinatorRoomDatabase.eventsDao();
-        eventsList=eventsDao.getAllEvents();
+        inCompleteEventsList=eventsDao.getAllEvents(0);
+        completeEventsList=eventsDao.getAllEvents(1);
         monitor=new MutableLiveData<>();
     }
     
-    public LiveData<List<Event>> allEvents(){
-        return  eventsList;
+    public LiveData<List<Event>> allInCompleteEvents(){
+        return  inCompleteEventsList;
+    }
+    public LiveData<List<Event>> allCompleteEvents(){
+        return  completeEventsList;
     }
 
     public void getEventsOnline(String token) {
@@ -43,6 +49,9 @@ public class EventRepository {
 
                     for (Event event:response.body()){
                         eventsDao.insert(event);
+
+                        Log.e("ererer",""+ event.is_complete);
+
                     }
                 }
             }

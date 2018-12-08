@@ -18,14 +18,16 @@ public class EventViewModel  extends AndroidViewModel {
     private EventRepository eventRepository;
     private AuthorizationRepository authorizationRepository;
     public MutableLiveData<NetworkResponse> monitor;
-    public LiveData<List<Event>> eventsList;
+    public LiveData<List<Event>> inCompleteEventsList;
+    public LiveData<List<Event>> completeEventsList;
     public LiveData<Authorization> mAuth;
     public EventViewModel(@NonNull Application application) {
         super(application);
 
         eventRepository=new EventRepository(application);
         authorizationRepository=new AuthorizationRepository(application);
-        eventsList=eventRepository.allEvents();
+        inCompleteEventsList=eventRepository.allInCompleteEvents();
+        completeEventsList=eventRepository.allCompleteEvents();
         mAuth=authorizationRepository.getAuth();
     }
 

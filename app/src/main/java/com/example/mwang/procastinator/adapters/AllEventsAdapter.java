@@ -3,9 +3,11 @@ package com.example.mwang.procastinator.adapters;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mwang.procastinator.R;
@@ -33,7 +35,10 @@ public class AllEventsAdapter extends RecyclerView.Adapter<AllEventsAdapter.Even
     }
 
     @Override
-    public void onBindViewHolder(@NonNull EventsViewHolder eventsViewHolder, int i) {
+    public void onBindViewHolder(@NonNull EventsViewHolder holder, int i) {
+        Event event=events.get(i);
+        holder.eventDateTime.setText(event.event_date+ event.event_time);
+        holder.reminderDateTime.setText(event.reminder_date+ event.reminder_time);
 
     }
 
@@ -48,7 +53,8 @@ public class AllEventsAdapter extends RecyclerView.Adapter<AllEventsAdapter.Even
     }
 
     public class EventsViewHolder extends RecyclerView.ViewHolder{
-//        @BindView(R.id.)
+        @BindView(R.id.event_time_date) TextView eventDateTime;
+        @BindView(R.id.reminder_date_time) TextView reminderDateTime;
         public EventsViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
