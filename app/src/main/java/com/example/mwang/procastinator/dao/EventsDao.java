@@ -23,6 +23,14 @@ public interface EventsDao {
     LiveData<List<Event>> getAllEvents(int isComplete);
 
 
+    @Query("SELECT * from events_table where is_synced = :is_synced or  has_update = :hasUpdate")
+    LiveData<List<Event>> getUnsyncedAndUnUpdatedEvents(int is_synced,int hasUpdate);
+
+
+    @Query("DELETE FROM events_table where is_synced= :is_synced or has_update= :hasUpdate")
+    void deleteSyncedAndUnUpdated(int is_synced,int hasUpdate);
+
+
 
 
 }

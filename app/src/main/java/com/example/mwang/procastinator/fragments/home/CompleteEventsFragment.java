@@ -8,9 +8,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.mwang.procastinator.R;
 import com.example.mwang.procastinator.adapters.AllEventsAdapter;
@@ -24,9 +26,10 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class CompleteEventsFragment extends Fragment {
+public class CompleteEventsFragment extends Fragment implements AllEventsAdapter.AllEventsAdapterInterface {
     EventViewModel eventViewModel;
     AllEventsAdapter allEventsAdapter;
+    Authorization authorization;
     @BindView(R.id.all_events_recycler)
     RecyclerView allEventsRecycler;
     @Nullable
@@ -45,19 +48,51 @@ public class CompleteEventsFragment extends Fragment {
 
 
         allEventsRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-        allEventsAdapter=new AllEventsAdapter(getActivity(),new ArrayList<Event>());
+        allEventsAdapter=new AllEventsAdapter(getActivity(),new ArrayList<Event>(),this);
         allEventsRecycler.setAdapter(allEventsAdapter);
 
 
         eventViewModel=ViewModelProviders.of(this).get(EventViewModel.class);
-        updateEventsData();
-        eventViewModel.mAuth.observe(this, new Observer<Authorization>() {
-            @Override
-            public void onChanged(@Nullable Authorization authorization) {
+//        updateEventsData();
+//        eventViewModel.mAuth.observe(this, new Observer<Authorization>() {
+//            @Override
+//            public void onChanged(@Nullable Authorization auth) {
+//
+//                if (auth!=null){
+//                    authorization=auth;
+////                    eventViewModel.getEventsOnline(authorization.access_token);
+//                    updateEventsData();
+//                }else{
+//                    Toast.makeText(getActivity(),"Auth Error",Toast.LENGTH_SHORT).show();
+//
+//                }
+//
+//            }
+//        });
 
-                if (authorization!=null){
-                    eventViewModel.getEventsOnline(authorization.access_token);
-                    updateEventsData();
+
+
+//        eventViewModel.unsyncedAndUnUpdatedEventsList.observe(this, new Observer<List<Event>>() {
+//            @Override
+//            public void onChanged(@Nullable List<Event> events) {
+//
+//                if (authorization!=null) {
+//                    eventViewModel.newUpdateEventsOnline(events, authorization.access_token);
+//                    updateEventsData();
+//                }else{
+//
+//                    Log.e("auth","cannot get auth");
+//
+//                }
+//
+//            }
+//        });
+
+        eventViewModel.completeEventsList.observe(this, new Observer<List<Event>>() {
+            @Override
+            public void onChanged(@Nullable List<Event> events) {
+                if (events!=null){
+                    allEventsAdapter.updateData(events);
                 }
 
             }
@@ -77,6 +112,11 @@ public class CompleteEventsFragment extends Fragment {
             }
         });
 
+
+    }
+
+    @Override
+    public void toggleEvent(Event event) {
 
     }
 }

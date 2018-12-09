@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.mwang.procastinator.R;
 import com.example.mwang.procastinator.adapters.AllEventsAdapter;
@@ -25,9 +26,10 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class InCompleteEventsFragment extends Fragment {
+public class InCompleteEventsFragment extends Fragment implements AllEventsAdapter.AllEventsAdapterInterface {
     EventViewModel eventViewModel;
     AllEventsAdapter allEventsAdapter;
+    Authorization authorization;
     @BindView(R.id.all_events_recycler) RecyclerView allEventsRecycler;
     @Nullable
     @Override
@@ -44,24 +46,52 @@ public class InCompleteEventsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
+
         allEventsRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-        allEventsAdapter=new AllEventsAdapter(getActivity(),new ArrayList<Event>());
+        allEventsAdapter=new AllEventsAdapter(getActivity(),new ArrayList<Event>(),this);
         allEventsRecycler.setAdapter(allEventsAdapter);
 
 
         eventViewModel=ViewModelProviders.of(this).get(EventViewModel.class);
-       updateEventsData();
-       eventViewModel.mAuth.observe(this, new Observer<Authorization>() {
-           @Override
-           public void onChanged(@Nullable Authorization authorization) {
+//       eventViewModel.mAuth.observe(this, new Observer<Authorization>() {
+//           @Override
+//           public void onChanged(@Nullable Authorization auth) {
+//
+//               if (auth!=null){
+//                   authorization=auth;
+//                   updateEventsData();
+//
+//               }else{
+//                   Toast.makeText(getActivity(),"Auth error",Toast.LENGTH_SHORT).show();
+//
+//
+//               }
+//
+//           }
+//       });
 
-               if (authorization!=null){
-                   eventViewModel.getEventsOnline(authorization.access_token);
-                   updateEventsData();
-               }
+//
+//       eventViewModel.unsyncedAndUnUpdatedEventsList.observe(this, new Observer<List<Event>>() {
+//           @Override
+//           public void onChanged(@Nullable List<Event> events) {
+//               if (authorization!=null) {
+//                   eventViewModel.newUpdateEventsOnline(events, authorization.access_token);
+//                   updateEventsData();
+//               }else{
+//                   Log.e("auth","cannot get auth");
+//               }
+//           }
+//       });
 
-           }
-       });
+        eventViewModel.inCompleteEventsList.observe(this, new Observer<List<Event>>() {
+            @Override
+            public void onChanged(@Nullable List<Event> events) {
+                if (events!=null){
+                    allEventsAdapter.updateData(events);
+                }
+
+            }
+        });
 
     }
 
@@ -78,6 +108,20 @@ public class InCompleteEventsFragment extends Fragment {
             }
         });
 
+
+    }
+
+    @Override
+    public void toggleEvent(final Event event) {
+        eventViewModel.changeEventStatus( event);
+        eventViewModel.mAuth.observe(this, new Observer<Authorization>() {
+            @Override
+            public void onChanged(@Nullable Authorization authorization) {
+                if (authorization!=null) {
+                   eventViewModel.toggleEventStatusOnline(authorization.access_token,event.getId());
+                }
+            }
+        });
 
     }
 }

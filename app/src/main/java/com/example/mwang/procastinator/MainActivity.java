@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,12 +19,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.mwang.procastinator.adapters.EventPagerAdapter;
 import com.example.mwang.procastinator.fragments.home.CompleteEventsFragment;
 import com.example.mwang.procastinator.fragments.home.InCompleteEventsFragment;
+import com.example.mwang.procastinator.models.Event;
 import com.example.mwang.procastinator.models.access.Authorization;
 import com.example.mwang.procastinator.views.EventViewModel;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,6 +37,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     EventViewModel eventViewModel;
+    Authorization authorization;
     @BindView(R.id.view_pager) ViewPager mPager;
     @BindView(R.id.tab_layout) TabLayout tab_layout;
     @Override
@@ -68,16 +74,33 @@ public class MainActivity extends AppCompatActivity
 
         eventViewModel.mAuth.observe(this, new Observer<Authorization>() {
             @Override
-            public void onChanged(@Nullable Authorization authorization) {
-                if (authorization!=null){
-
-                    eventViewModel.getEventsOnline(authorization.access_token);
-
+            public void onChanged(@Nullable Authorization auth) {
+                if (auth!=null){
+                    authorization=auth;
+//                    eventViewModel.getEventsOnline(authorization.access_token);
+                }else{
+                    Toast.makeText(getApplicationContext(),"Auth error",Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
 
+        eventViewModel.unsyncedAndUnUpdatedEventsList.observe(this, new Observer<List<Event>>() {
+            @Override
+            public void onChanged(@Nullable List<Event> events) {
+                if (authorization!=null ){
+//                if (events==null){
+//                    eventViewModel.getEventsOnline(authorization.access_token);
+//                }else{
+
+                        eventViewModel.newUpdateEventsOnline(events,authorization.access_token);
+//            }
+
+                }else{
+                    Toast.makeText(getApplicationContext(),"Error",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         //initiate the pager adapter
         EventPagerAdapter eventPagerAdapter=new EventPagerAdapter(getSupportFragmentManager());
         eventPagerAdapter.addFragment(new InCompleteEventsFragment(),"InComplete Events");

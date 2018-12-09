@@ -20,6 +20,7 @@ public class EventViewModel  extends AndroidViewModel {
     public MutableLiveData<NetworkResponse> monitor;
     public LiveData<List<Event>> inCompleteEventsList;
     public LiveData<List<Event>> completeEventsList;
+    public LiveData<List<Event>> unsyncedAndUnUpdatedEventsList;
     public LiveData<Authorization> mAuth;
     public EventViewModel(@NonNull Application application) {
         super(application);
@@ -29,10 +30,24 @@ public class EventViewModel  extends AndroidViewModel {
         inCompleteEventsList=eventRepository.allInCompleteEvents();
         completeEventsList=eventRepository.allCompleteEvents();
         mAuth=authorizationRepository.getAuth();
+        unsyncedAndUnUpdatedEventsList=eventRepository.unsyncedAndUnUpdatedEvents();
     }
 
     public void getEventsOnline(String token){
         eventRepository.getEventsOnline(token);
 
+    }
+
+    public void changeEventStatus(Event event) {
+
+        eventRepository.changeEventStatus(event);
+    }
+
+    public void toggleEventStatusOnline(String token,int event_id){
+        eventRepository.toggleEventStatusOnline(token,event_id);
+    }
+
+    public void newUpdateEventsOnline(List<Event> eventList,String token){
+        eventRepository.newUpdateEventsOnline(eventList,token);
     }
 }
