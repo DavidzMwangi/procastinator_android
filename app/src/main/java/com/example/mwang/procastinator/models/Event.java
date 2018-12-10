@@ -5,10 +5,11 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
-import java.sql.Date;
-import java.sql.Time;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 @Entity(tableName = "events_table")
@@ -51,6 +52,15 @@ public class Event {
     public int is_complete;
 
 
+    @ColumnInfo(name = "is_synced")
+    @SerializedName("is_synced")
+    public int is_synced;
+
+    @ColumnInfo(name = "has_update")
+    @SerializedName("has_update")
+    public int has_update;
+
+
     @NonNull
     public int getId() {
         return id;
@@ -59,4 +69,11 @@ public class Event {
     public void setId(@NonNull int id) {
         this.id = id;
     }
+
+
+    public JSONObject getJsonObject() throws JSONException {
+        Gson gson=new Gson();
+        return new JSONObject(gson.toJson(this));
+    }
+
 }

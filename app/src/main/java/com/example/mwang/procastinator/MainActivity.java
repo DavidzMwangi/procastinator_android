@@ -2,11 +2,15 @@ package com.example.mwang.procastinator;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentTransaction;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,32 +20,46 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
-import com.example.mwang.procastinator.fragments.home.AllEventsFragment;
+import com.example.mwang.procastinator.adapters.EventPagerAdapter;
+import com.example.mwang.procastinator.fragments.home.CompleteEventsFragment;
+import com.example.mwang.procastinator.fragments.home.InCompleteEventsFragment;
+import com.example.mwang.procastinator.models.Event;
 import com.example.mwang.procastinator.models.access.Authorization;
 import com.example.mwang.procastinator.views.EventViewModel;
+
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     EventViewModel eventViewModel;
+    Authorization authorization;
+    @BindView(R.id.view_pager) ViewPager mPager;
+    @BindView(R.id.tab_layout) TabLayout tab_layout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        ButterKnife.bind(this);
 
-
-        changeFragment(0);
+//        changeFragment(0);
         eventViewModel=ViewModelProviders.of(this).get(EventViewModel.class);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent=new Intent(MainActivity.this,EventActivity.class);
+                startActivity(intent);
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
             }
         });
 
@@ -59,14 +77,42 @@ public class MainActivity extends AppCompatActivity
 
         eventViewModel.mAuth.observe(this, new Observer<Authorization>() {
             @Override
-            public void onChanged(@Nullable Authorization authorization) {
-                if (authorization!=null){
-
-                    eventViewModel.getEventsOnline(authorization.access_token);
-
+            public void onChanged(@Nullable Authorization auth) {
+                if (auth!=null){
+                    authorization=auth;
+//                    eventViewModel.getEventsOnline(authorization.access_token);
+                }else{
+                    Toast.makeText(getApplicationContext(),"Auth error",Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
+
+        eventViewModel.unsyncedAndUnUpdatedEventsList.observe(this, new Observer<List<Event>>() {
+            @Override
+            public void onChanged(@Nullable List<Event> events) {
+                if (authorization!=null ){
+//                if (events==null){
+//                    eventViewModel.getEventsOnline(authorization.access_token);
+//                }else{
+
+                        eventViewModel.newUpdateEventsOnline(events,authorization.access_token);
+//            }
+
+                }else{
+                    Toast.makeText(getApplicationContext(),"Error",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        //initiate the pager adapter
+        EventPagerAdapter eventPagerAdapter=new EventPagerAdapter(getSupportFragmentManager());
+        eventPagerAdapter.addFragment(new InCompleteEventsFragment(),"InComplete Events");
+        eventPagerAdapter.addFragment(new CompleteEventsFragment(),"Completed Events");
+
+        //link adapter with page layout
+        tab_layout.setSelectedTabIndicatorColor(Color.parseColor("#FBC02D"));
+        mPager.setAdapter(eventPagerAdapter);
+        tab_layout.setupWithViewPager(mPager);
     }
 
     @Override
@@ -126,16 +172,16 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    public void changeFragment(int page){
-        FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
-        switch (page){
-            case 0:
-                fragmentTransaction.replace(R.id.main_frame,new AllEventsFragment(),"All Events").commit();
-            break;
-
-            case 1:
-
-                break;
-        }
-    }
+//    public void changeFragment(int page){
+//        FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
+//        switch (page){
+//            case 0:
+//                fragmentTransaction.replace(R.id.main_frame,new InCompleteEventsFragment(),"All Events").commit();
+//            break;
+//
+//            case 1:
+//
+//                break;
+//        }
+//    }
 }
