@@ -24,7 +24,9 @@ public class Event {
     @SerializedName("name")
     public String name;
 
-
+    @ColumnInfo(name = "description")
+    @SerializedName("description")
+    public String description;
 
     @ColumnInfo(name = "event_date")
     @SerializedName("event_date")
