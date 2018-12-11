@@ -68,6 +68,7 @@ public class EventActivity extends AppCompatActivity  implements CollectionTimeD
                 CollectionTimeDialog collectionTimeDialog=new CollectionTimeDialog();
                 Bundle bundle=new Bundle();
                 bundle.putInt("time",1);
+                collectionTimeDialog.setArguments(bundle);
                 collectionTimeDialog.show(getSupportFragmentManager(),"Collection Time");
             }
         });
@@ -93,6 +94,7 @@ public class EventActivity extends AppCompatActivity  implements CollectionTimeD
                 CollectionTimeDialog collectionTimeDialog=new CollectionTimeDialog();
                 Bundle bundle=new Bundle();
                 bundle.putInt("time",2);
+                collectionTimeDialog.setArguments(bundle);
                 collectionTimeDialog.show(getSupportFragmentManager(),"Collection Time");
             }
         });

@@ -14,7 +14,12 @@ import android.widget.Toast;
 import com.example.mwang.procastinator.R;
 import com.example.mwang.procastinator.models.Event;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,8 +44,25 @@ public class AllEventsAdapter extends RecyclerView.Adapter<AllEventsAdapter.Even
     @Override
     public void onBindViewHolder(@NonNull EventsViewHolder holder, int i) {
         final Event event=events.get(i);
-        holder.eventDateTime.setText(event.event_date+ event.event_time);
-        holder.reminderDateTime.setText(event.reminder_date+ event.reminder_time);
+
+        //convert the date
+
+        SimpleDateFormat formatter2=new SimpleDateFormat("yyyy-MM-dd hh:mm",Locale.ENGLISH);
+
+
+        SimpleDateFormat formatter5=new SimpleDateFormat("E, MMM d yyyy HH:mm a");
+
+        try {
+            Date event_all_date=formatter2.parse(event.event_date+ " "+ event.event_time);
+            Date reminder_all_date=formatter2.parse(event.event_date+ " "+ event.event_time);
+            holder.eventDateTime.setText(formatter5.format(event_all_date));
+            holder.reminderDateTime.setText(formatter5.format(reminder_all_date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+
 
 
         if (event.is_complete==1){
