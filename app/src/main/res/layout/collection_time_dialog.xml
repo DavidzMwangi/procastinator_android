@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<LinearLayout android:orientation="vertical"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:id="@+id/edit_name"
+    android:padding="@dimen/ten"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TimePicker
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/collection_time">
+
+    </TimePicker>
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/select_time"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="150dp"
+        android:layout_height="30dp"
+        android:layout_marginBottom="@dimen/ten"
+
+        android:layout_marginTop="@dimen/ten"
+        android:background="@drawable/round__dark_shape_button"
+        android:text="Select" />
+</LinearLayout>

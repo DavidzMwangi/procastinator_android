@@ -92,7 +92,6 @@ public class AuthorizationRepository {
             @Override
             public void onFailure(Call<Authorization> call, Throwable t) {
 
-                Log.e("reg","error");
 
                 try{
                     monitor.postValue(new NetworkResponse(false,"Check your internet connection then try again",((HttpException) t).code()));
