@@ -29,7 +29,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:id="@+id/name"
-
                 android:inputType="textEmailAddress"
                 android:hint="Name"
                 android:paddingStart="@dimen/ten"
@@ -49,7 +48,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:id="@+id/description"
-
                 android:inputType="textEmailAddress"
                 android:hint="Description"
                 android:paddingStart="@dimen/ten"

@@ -14,6 +14,8 @@ import android.widget.Toast;
 import com.example.mwang.procastinator.R;
 import com.example.mwang.procastinator.models.Event;
 
+import org.w3c.dom.Text;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -63,7 +65,7 @@ public class AllEventsAdapter extends RecyclerView.Adapter<AllEventsAdapter.Even
 
 
 
-
+        holder.name.setText(event.name);
 
         if (event.is_complete==1){
             holder.completeBtn.setVisibility(View.GONE);
@@ -93,6 +95,7 @@ public class AllEventsAdapter extends RecyclerView.Adapter<AllEventsAdapter.Even
         @BindView(R.id.event_time_date) TextView eventDateTime;
         @BindView(R.id.reminder_date_time) TextView reminderDateTime;
         @BindView(R.id.complete_event_btn) Button completeBtn;
+        @BindView(R.id.name) TextView name;
         public EventsViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
