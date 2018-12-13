@@ -50,4 +50,8 @@ public class EventViewModel  extends AndroidViewModel {
     public void newUpdateEventsOnline(List<Event> eventList,String token){
         eventRepository.newUpdateEventsOnline(eventList,token);
     }
+
+    public void newEventOffline(Event newEvent) {
+        eventRepository.newEventOffline(newEvent);
+    }
 }

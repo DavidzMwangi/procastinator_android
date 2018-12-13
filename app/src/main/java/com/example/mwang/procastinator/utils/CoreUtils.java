@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.Calendar;
+import java.util.Random;
 import java.util.concurrent.Executors;
 
 import okhttp3.OkHttpClient;
@@ -61,6 +62,12 @@ public class CoreUtils {
         return auth_retrofit;
     }
 
+
+    public static int idGenerator(){
+        double ider=(Math.random()*500000);
+
+        return (int) ider;
+    }
     public static int todayAsInt(){
         Calendar calendar = Calendar.getInstance();
         return calendar.get(Calendar.DAY_OF_WEEK);

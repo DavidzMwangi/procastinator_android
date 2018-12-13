@@ -147,6 +147,10 @@ public class EventRepository {
 
     }
 
+    public void newEventOffline(Event newEvent) {
+        new ChangeEventAsync(eventsDao).execute(newEvent);
+    }
+
     private static class ChangeEventAsync extends AsyncTask<Event,Void,Void>{
 
         private EventsDao eventsDao;
