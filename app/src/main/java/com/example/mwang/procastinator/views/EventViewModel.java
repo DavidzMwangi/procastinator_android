@@ -8,8 +8,10 @@ import android.support.annotation.NonNull;
 
 import com.example.mwang.procastinator.models.Event;
 import com.example.mwang.procastinator.models.access.Authorization;
+import com.example.mwang.procastinator.models.access.User;
 import com.example.mwang.procastinator.repositories.AuthorizationRepository;
 import com.example.mwang.procastinator.repositories.EventRepository;
+import com.example.mwang.procastinator.repositories.UserRepository;
 import com.example.mwang.procastinator.utils.NetworkResponse;
 
 import java.util.List;
@@ -17,7 +19,7 @@ import java.util.List;
 public class EventViewModel  extends AndroidViewModel {
     private EventRepository eventRepository;
     private AuthorizationRepository authorizationRepository;
-    public MutableLiveData<NetworkResponse> monitor;
+
     public LiveData<List<Event>> inCompleteEventsList;
     public LiveData<List<Event>> completeEventsList;
     public LiveData<List<Event>> unsyncedAndUnUpdatedEventsList;
@@ -54,4 +56,7 @@ public class EventViewModel  extends AndroidViewModel {
     public void newEventOffline(Event newEvent) {
         eventRepository.newEventOffline(newEvent);
     }
+
+
+
 }

@@ -20,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mwang.procastinator.adapters.EventPagerAdapter;
@@ -27,7 +28,9 @@ import com.example.mwang.procastinator.fragments.home.CompleteEventsFragment;
 import com.example.mwang.procastinator.fragments.home.InCompleteEventsFragment;
 import com.example.mwang.procastinator.models.Event;
 import com.example.mwang.procastinator.models.access.Authorization;
+import com.example.mwang.procastinator.models.access.User;
 import com.example.mwang.procastinator.views.EventViewModel;
+import com.example.mwang.procastinator.views.MainActivityViewModel;
 
 import java.util.List;
 
@@ -38,6 +41,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     EventViewModel eventViewModel;
+    MainActivityViewModel mainActivityViewModel;
     Authorization authorization;
     @BindView(R.id.view_pager) ViewPager mPager;
     @BindView(R.id.tab_layout) TabLayout tab_layout;
@@ -51,7 +55,7 @@ public class MainActivity extends AppCompatActivity
 
 //        changeFragment(0);
         eventViewModel=ViewModelProviders.of(this).get(EventViewModel.class);
-
+        mainActivityViewModel=ViewModelProviders.of(this).get(MainActivityViewModel.class);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,13 +76,32 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        View headerView=navigationView.getHeaderView(0);
+        final TextView nav_user_name=(TextView) headerView.findViewById(R.id.username);
+        final TextView nav_email=(TextView)headerView.findViewById(R.id.email);
 
 
+        mainActivityViewModel.getAuthInfo().observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(@Nullable User user) {
+
+            if (user!=null){
+                nav_email.setText(user.email);
+                nav_user_name.setText(user.name);
+            }else{
+                Log.e("user","null");
+            }
+
+            }
+        });
 
         eventViewModel.mAuth.observe(this, new Observer<Authorization>() {
             @Override
             public void onChanged(@Nullable Authorization auth) {
                 if (auth!=null){
+
+                    //get auth data
+                    mainActivityViewModel.getAuthUserOnline(auth.access_token);
                     authorization=auth;
 //                    eventViewModel.getEventsOnline(authorization.access_token);
                 }else{
@@ -92,14 +115,17 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onChanged(@Nullable List<Event> events) {
                 if (authorization!=null ){
-//                if (events==null){
-//                    eventViewModel.getEventsOnline(authorization.access_token);
-//                }else{
 
-                        eventViewModel.newUpdateEventsOnline(events,authorization.access_token);
-//            }
+                    eventViewModel.newUpdateEventsOnline(events,authorization.access_token);
 
-                }else{
+
+//                    if (events!=null && events.size()!=0){
+//                        eventViewModel.newUpdateEventsOnline(events,authorization.access_token);
+//                    }else{
+//                        eventViewModel.getEventsOnline(authorization.access_token);
+//                    }
+
+                    }else{
                     Toast.makeText(getApplicationContext(),"Error",Toast.LENGTH_SHORT).show();
                 }
             }

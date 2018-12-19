@@ -20,7 +20,7 @@ public interface UserDao {
     void deleteAll();
 
     @Query("SELECT * from user_table LIMIT 1 ")
-    LiveData<List<User>> getAuthUser();
+    LiveData<User> getAuthUser();
 
 
 }
