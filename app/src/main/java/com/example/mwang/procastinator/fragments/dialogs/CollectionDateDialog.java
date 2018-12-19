@@ -101,7 +101,8 @@ public class CollectionDateDialog extends DialogFragment {
     }
 
     public String dateConverter(int day, int month, int year){
-        SimpleDateFormat dateFormatter=new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat dateFormatter=new SimpleDateFormat("yyyy-MM-dd");
+//        SimpleDateFormat dateFormatter=new SimpleDateFormat("dd-MM-yyyy");
         Date d=new Date(year-1900,month,day);
         return dateFormatter.format(d);
 

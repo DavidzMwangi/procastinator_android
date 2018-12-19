@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -44,14 +45,7 @@ public class EventActivity extends AppCompatActivity  implements CollectionTimeD
         setSupportActionBar(toolbar);
 
         ButterKnife.bind(this);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 //        Toast.makeText(getApplicationContext(),CoreUtils.idGenerator()+"",Toast.LENGTH_SHORT).show();
@@ -60,11 +54,6 @@ public class EventActivity extends AppCompatActivity  implements CollectionTimeD
         dateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                /*
-                CollectionDateDialog collectionDateDialog=new CollectionDateDialog();
-                collectionDateDialog.show(getChildFragmentManager(),"Collection Date");
-                 */
 
                 CollectionDateDialog collectionDateDialog=new CollectionDateDialog();
                 Bundle bundle=new Bundle();

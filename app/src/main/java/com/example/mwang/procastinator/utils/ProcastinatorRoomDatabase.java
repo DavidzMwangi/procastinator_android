@@ -8,6 +8,7 @@ import android.content.Context;
 
 import com.example.mwang.procastinator.dao.AuthorizationDao;
 import com.example.mwang.procastinator.dao.EventsDao;
+import com.example.mwang.procastinator.dao.UserDao;
 import com.example.mwang.procastinator.models.Event;
 import com.example.mwang.procastinator.models.access.Authorization;
 import com.example.mwang.procastinator.models.access.User;
@@ -17,6 +18,7 @@ public abstract class ProcastinatorRoomDatabase extends RoomDatabase {
 
     public abstract AuthorizationDao authorizationDao();
     public abstract EventsDao eventsDao();
+    public abstract UserDao usersDao();
 
 
     private static ProcastinatorRoomDatabase INSTANCE;
