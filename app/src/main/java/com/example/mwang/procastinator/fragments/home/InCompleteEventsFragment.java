@@ -124,4 +124,9 @@ public class InCompleteEventsFragment extends Fragment implements AllEventsAdapt
         });
 
     }
+
+    @Override
+    public void deleteEvent(Event event) {
+
+    }
 }

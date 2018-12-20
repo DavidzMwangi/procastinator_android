@@ -25,5 +25,6 @@ public interface EventService {
     @POST("new_event")
     Call<JSONObject> updateEvents(@Body JSONArray jsonArray);
 
-
+    @GET("delete_event/{event}")
+    Call<List<Event>> deleteEvent(@Path("event") int event);
 }
