@@ -1,9 +1,13 @@
 package com.example.mwang.procastinator;
 
+import android.app.Application;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -29,6 +33,7 @@ import com.example.mwang.procastinator.fragments.home.InCompleteEventsFragment;
 import com.example.mwang.procastinator.models.Event;
 import com.example.mwang.procastinator.models.access.Authorization;
 import com.example.mwang.procastinator.models.access.User;
+import com.example.mwang.procastinator.utils.ProcastinatorRoomDatabase;
 import com.example.mwang.procastinator.views.EventViewModel;
 import com.example.mwang.procastinator.views.MainActivityViewModel;
 
@@ -43,6 +48,8 @@ public class MainActivity extends AppCompatActivity
     EventViewModel eventViewModel;
     MainActivityViewModel mainActivityViewModel;
     Authorization authorization;
+    public static MutableLiveData<Boolean> out;
+
     @BindView(R.id.view_pager) ViewPager mPager;
     @BindView(R.id.tab_layout) TabLayout tab_layout;
     @Override
@@ -139,6 +146,21 @@ public class MainActivity extends AppCompatActivity
         tab_layout.setSelectedTabIndicatorColor(Color.parseColor("#FBC02D"));
         mPager.setAdapter(eventPagerAdapter);
         tab_layout.setupWithViewPager(mPager);
+
+
+
+        MainActivity.out = new MutableLiveData<>();
+        MainActivity.out.postValue(false);
+        MainActivity.out.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(@Nullable Boolean aBoolean) {
+                if(aBoolean!=null && aBoolean){
+                    Intent logout=new Intent(getApplicationContext(),AuthActivity.class);
+                    logout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(logout);
+                }
+            }
+        });
     }
 
     @Override
@@ -189,7 +211,9 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_logout) {
+
+
 
         }
 
@@ -198,16 +222,34 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-//    public void changeFragment(int page){
-//        FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
-//        switch (page){
-//            case 0:
-//                fragmentTransaction.replace(R.id.main_frame,new InCompleteEventsFragment(),"All Events").commit();
-//            break;
-//
-//            case 1:
-//
-//                break;
-//        }
-//    }
+    private static class deleteDatabaseAsync extends AsyncTask<Void, Void,Void>{
+        private Application application;
+        public deleteDatabaseAsync(Application application1){
+            this.application=application1;
+        }
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            ProcastinatorRoomDatabase db=ProcastinatorRoomDatabase.getDatabase(application);
+            try{
+                db.authorizationDao().deleteAll();
+                db.eventsDao().deleteAll();
+                db.usersDao().deleteAll();
+                db.clearAllTables();
+
+                MainActivity.out.postValue(true);
+            }catch (Exception e){
+
+
+
+            }
+
+
+            return null;
+        }
+    }
+
+
+
+
 }

@@ -34,6 +34,13 @@
             android:id="@+id/complete_event_btn"
             android:background="@drawable/rounded_button_insider"
             android:text="Complete"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/options"
+            android:src="@drawable/ic_action_menu_option"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"/>
     </RelativeLayout>
 
 
