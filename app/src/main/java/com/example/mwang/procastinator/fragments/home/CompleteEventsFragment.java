@@ -53,6 +53,7 @@ public class CompleteEventsFragment extends Fragment implements AllEventsAdapter
 
 
         eventViewModel=ViewModelProviders.of(this).get(EventViewModel.class);
+
 //        updateEventsData();
 //        eventViewModel.mAuth.observe(this, new Observer<Authorization>() {
 //            @Override
@@ -118,5 +119,23 @@ public class CompleteEventsFragment extends Fragment implements AllEventsAdapter
     @Override
     public void toggleEvent(Event event) {
 
+    }
+
+    @Override
+    public void deleteEvent(Event event) {
+        if (event.is_synced==0){
+            //new event not created online
+
+            eventViewModel.deleteEventLocally(event.getId());
+        }else{
+            //event existing in the backend
+
+            if (authorization!=null){
+                eventViewModel.deleteEventOnLine(authorization.access_token,event.getId());
+            }else{
+                Toast.makeText(getActivity(),"Unable to delete the event at the moment, Please retry after a while",Toast.LENGTH_LONG).show();
+            }
+
+        }
     }
 }

@@ -58,5 +58,13 @@ public class EventViewModel  extends AndroidViewModel {
     }
 
 
+    public void deleteEventLocally(int id) {
 
+        eventRepository.deleteEventLocally(id);
+    }
+
+    public void deleteEventOnLine(String token,int id) {
+
+        eventRepository.deleteEventOnLine(token,id);
+    }
 }

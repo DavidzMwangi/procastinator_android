@@ -154,6 +154,35 @@ public class EventRepository {
         new ChangeEventAsync(eventsDao).execute(newEvent);
     }
 
+    public void deleteEventLocally(int id) {
+
+            new DeleteEventLocallyAsync(eventsDao).execute(id);
+    }
+
+    public void deleteEventOnLine(String token, final int event_ider) {
+        Call<List<Event>> call=CoreUtils.getAuthRetrofitClient(token).create(EventService.class).deleteEvent(event_ider);
+        call.enqueue(new Callback<List<Event>>() {
+            @Override
+            public void onResponse(Call<List<Event>> call, Response<List<Event>> response) {
+                //delete the event locally
+                eventsDao.deleteUsingId(event_ider);
+
+                //update the events from online server
+                if (response.body()!=null) {
+                    for (Event event : response.body()) {
+                        eventsDao.insert(event);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Event>> call, Throwable t) {
+
+            }
+        });
+
+    }
+
     private static class ChangeEventAsync extends AsyncTask<Event,Void,Void>{
 
         private EventsDao eventsDao;
@@ -170,5 +199,18 @@ public class EventRepository {
     }
 
 
+    private static class DeleteEventLocallyAsync extends AsyncTask<Integer,Void,Void>{
+
+        EventsDao eventsDao;
+        public DeleteEventLocallyAsync(EventsDao eventsDao1){
+            this.eventsDao=eventsDao1;
+        }
+        @Override
+        protected Void doInBackground(Integer... integers) {
+
+            eventsDao.deleteUsingId(integers[0]);
+            return null;
+        }
+    }
 
 }

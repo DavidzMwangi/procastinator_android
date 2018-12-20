@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -71,7 +72,26 @@ public class AllEventsAdapter extends RecyclerView.Adapter<AllEventsAdapter.Even
         }
 
 
+        holder.singleEvent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               if (event.is_complete==0){
+                   //open the event activity with the event content //this is editting the event
+               }
 
+            }
+        });
+
+
+
+//        holder.singleEvent.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//
+//                Toast.makeText(context,"Kimoda",Toast.LENGTH_LONG).show();
+//                return false;
+//            }
+//        });
         holder.name.setText(event.name);
 
         if (event.is_complete==1){
@@ -100,7 +120,7 @@ public class AllEventsAdapter extends RecyclerView.Adapter<AllEventsAdapter.Even
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()){
                             case R.id.option_delete:
-
+                                    allEventsAdapterInterface.deleteEvent(event);
                                 return  true;
 
                             case R.id.option_edit:
@@ -132,12 +152,14 @@ public class AllEventsAdapter extends RecyclerView.Adapter<AllEventsAdapter.Even
         this.notifyDataSetChanged();
     }
 
+
     public class EventsViewHolder extends RecyclerView.ViewHolder{
         @BindView(R.id.event_time_date) TextView eventDateTime;
         @BindView(R.id.reminder_date_time) TextView reminderDateTime;
         @BindView(R.id.complete_event_btn) Button completeBtn;
         @BindView(R.id.name) TextView name;
         @BindView(R.id.options) ImageView options;
+        @BindView(R.id.single_event) LinearLayout singleEvent;
         public EventsViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
@@ -147,5 +169,6 @@ public class AllEventsAdapter extends RecyclerView.Adapter<AllEventsAdapter.Even
     public interface AllEventsAdapterInterface{
 
         void toggleEvent(Event event);
+        void deleteEvent(Event event);
     }
 }
