@@ -123,17 +123,18 @@ public class MainActivity extends AppCompatActivity
             public void onChanged(@Nullable List<Event> events) {
                 if (authorization!=null ){
 
-                    eventViewModel.newUpdateEventsOnline(events,authorization.access_token);
+//                    eventViewModel.newUpdateEventsOnline(events,authorization.access_token);
 
 
-//                    if (events!=null && events.size()!=0){
-//                        eventViewModel.newUpdateEventsOnline(events,authorization.access_token);
-//                    }else{
-//                        eventViewModel.getEventsOnline(authorization.access_token);
-//                    }
+                    if (events!=null && events.size()!=0){
+                        eventViewModel.newUpdateEventsOnline(events,authorization.access_token);
+                    }else{
+                        eventViewModel.getEventsOnline(authorization.access_token);
+                    }
 
                     }else{
-                    Toast.makeText(getApplicationContext(),"Error",Toast.LENGTH_SHORT).show();
+
+                    Toast.makeText(getApplicationContext(),"Unable to sync your events with online content",Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -202,14 +203,12 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
 
-        } else if (id == R.id.nav_slideshow) {
+            Intent intent=new Intent(MainActivity.this,EventActivity.class);
+            startActivity(intent);
 
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
+        }
+        else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_logout) {
 

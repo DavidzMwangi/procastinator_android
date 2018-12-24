@@ -24,6 +24,8 @@ public class EventViewModel  extends AndroidViewModel {
     public LiveData<List<Event>> completeEventsList;
     public LiveData<List<Event>> unsyncedAndUnUpdatedEventsList;
     public LiveData<Authorization> mAuth;
+    public MutableLiveData<NetworkResponse> monitor;
+
     public EventViewModel(@NonNull Application application) {
         super(application);
 
@@ -32,6 +34,7 @@ public class EventViewModel  extends AndroidViewModel {
         inCompleteEventsList=eventRepository.allInCompleteEvents();
         completeEventsList=eventRepository.allCompleteEvents();
         mAuth=authorizationRepository.getAuth();
+        monitor=eventRepository.monitor;
         unsyncedAndUnUpdatedEventsList=eventRepository.unsyncedAndUnUpdatedEvents();
     }
 
