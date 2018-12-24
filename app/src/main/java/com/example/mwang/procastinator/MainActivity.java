@@ -214,7 +214,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_logout) {
 
 
-
+            new DeleteDatabaseAsync(getApplication()).execute();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -222,9 +222,9 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private static class deleteDatabaseAsync extends AsyncTask<Void, Void,Void>{
+    private static class DeleteDatabaseAsync extends AsyncTask<Void, Void,Void>{
         private Application application;
-        public deleteDatabaseAsync(Application application1){
+        public DeleteDatabaseAsync(Application application1){
             this.application=application1;
         }
         @Override
