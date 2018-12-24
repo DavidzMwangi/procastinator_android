@@ -1,5 +1,6 @@
 package com.example.mwang.procastinator.fragments.Auth;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,9 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.mwang.procastinator.R;
+import com.example.mwang.procastinator.utils.NetworkResponse;
 import com.example.mwang.procastinator.views.AuthorizationViewModel;
 
 import butterknife.BindView;
@@ -29,6 +32,7 @@ public class RegisterFragment extends Fragment {
     @BindView(R.id.name_edit_text) EditText name_edit_text;
     @BindView(R.id.password_confirm_edit_text) EditText passwordConfirm;
     @BindView(R.id.sign_btn) Button signBtn;
+    @BindView(R.id.register_btn) ProgressBar registerPr;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -58,6 +62,21 @@ public class RegisterFragment extends Fragment {
             }
         });
 
+        authorizationViewModel.monitor.observe(this, new Observer<NetworkResponse>() {
+            @Override
+            public void onChanged(@Nullable NetworkResponse networkResponse) {
+                if(networkResponse==null)
+                    return;
+                if(networkResponse.is_loading){
+                    registerPr.setVisibility(View.VISIBLE);
+                }else{
+                    registerPr.setVisibility(View.GONE);
+                }
+
+                if(networkResponse.message!=null && !networkResponse.message.equals(""))
+                    Snackbar.make(registerPr, networkResponse.message , Snackbar.LENGTH_LONG).show();
+            }
+        });
 
         signBtn.setOnClickListener(new View.OnClickListener() {
             @Override
