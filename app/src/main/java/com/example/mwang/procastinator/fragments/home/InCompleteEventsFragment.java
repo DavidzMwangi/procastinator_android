@@ -6,12 +6,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.example.mwang.procastinator.R;
@@ -31,6 +33,8 @@ public class InCompleteEventsFragment extends Fragment implements AllEventsAdapt
     AllEventsAdapter allEventsAdapter;
     Authorization authorization;
     @BindView(R.id.all_events_recycler) RecyclerView allEventsRecycler;
+    @BindView(R.id.swipe_refresh) SwipeRefreshLayout swipe_refresh;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -53,35 +57,37 @@ public class InCompleteEventsFragment extends Fragment implements AllEventsAdapt
 
 
         eventViewModel=ViewModelProviders.of(this).get(EventViewModel.class);
-//       eventViewModel.mAuth.observe(this, new Observer<Authorization>() {
-//           @Override
-//           public void onChanged(@Nullable Authorization auth) {
-//
-//               if (auth!=null){
-//                   authorization=auth;
-//                   updateEventsData();
-//
-//               }else{
-//                   Toast.makeText(getActivity(),"Auth error",Toast.LENGTH_SHORT).show();
-//
-//
-//               }
-//
-//           }
-//       });
 
-//
-//       eventViewModel.unsyncedAndUnUpdatedEventsList.observe(this, new Observer<List<Event>>() {
-//           @Override
-//           public void onChanged(@Nullable List<Event> events) {
-//               if (authorization!=null) {
-//                   eventViewModel.newUpdateEventsOnline(events, authorization.access_token);
-//                   updateEventsData();
-//               }else{
-//                   Log.e("auth","cannot get auth");
-//               }
-//           }
-//       });
+
+        swipe_refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if(authorization!=null){
+
+                    //load the data online when the error is resolved
+
+                    eventViewModel.unsyncedAndUnUpdatedEventsList.observe(getActivity(), new Observer<List<Event>>() {
+                        @Override
+                        public void onChanged(@Nullable List<Event> events) {
+                            if (authorization!=null ){
+
+                                if (events!=null && events.size()!=0){
+                                    eventViewModel.newUpdateEventsOnline(events,authorization.access_token);
+                                }else{
+                                    eventViewModel.getEventsOnline(authorization.access_token);
+                                }
+
+                            }else{
+
+                                Toast.makeText(getActivity(),"Unable to sync your events with online content",Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
+
 
         eventViewModel.inCompleteEventsList.observe(this, new Observer<List<Event>>() {
             @Override

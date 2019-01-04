@@ -60,7 +60,12 @@
             android:background="@color/text_shadow_white"
             android:orientation="vertical">
 
-
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:id="@+id/register_btn"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -157,6 +162,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Sign Up"
+                android:background="@drawable/rounded_edit_text"
+                android:backgroundTint="@color/colorAccent"
                 android:layout_marginTop="@dimen/ten"
                 android:layout_gravity="center"
                 android:id="@+id/sign_btn"/>

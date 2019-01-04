@@ -5,7 +5,9 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,6 +20,7 @@ import com.example.mwang.procastinator.R;
 import com.example.mwang.procastinator.adapters.AllEventsAdapter;
 import com.example.mwang.procastinator.models.Event;
 import com.example.mwang.procastinator.models.access.Authorization;
+import com.example.mwang.procastinator.utils.NetworkResponse;
 import com.example.mwang.procastinator.views.EventViewModel;
 
 import java.util.ArrayList;
@@ -30,8 +33,9 @@ public class CompleteEventsFragment extends Fragment implements AllEventsAdapter
     EventViewModel eventViewModel;
     AllEventsAdapter allEventsAdapter;
     Authorization authorization;
-    @BindView(R.id.all_events_recycler)
-    RecyclerView allEventsRecycler;
+    @BindView(R.id.all_events_recycler) RecyclerView allEventsRecycler;
+    @BindView(R.id.swipe_refresh) SwipeRefreshLayout swipe_refresh;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -53,6 +57,56 @@ public class CompleteEventsFragment extends Fragment implements AllEventsAdapter
 
 
         eventViewModel=ViewModelProviders.of(this).get(EventViewModel.class);
+
+        eventViewModel.monitor.observe(this, new Observer<NetworkResponse>() {
+            @Override
+            public void onChanged(@Nullable NetworkResponse networkResponse) {
+
+                if(networkResponse!=null){
+                    if(networkResponse.is_loading){
+                        swipe_refresh.setRefreshing(true);
+                    }else{
+                        swipe_refresh.setRefreshing(false);
+                    }
+
+                    if(networkResponse.message!=null && !networkResponse.message.equals(""))
+                        Snackbar.make(allEventsRecycler, networkResponse.message , Snackbar.LENGTH_LONG).show();
+                }
+            }
+        });
+
+
+        swipe_refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if(authorization!=null){
+
+                    //load the data online when the error is resolved
+
+                    eventViewModel.unsyncedAndUnUpdatedEventsList.observe(getActivity(), new Observer<List<Event>>() {
+                        @Override
+                        public void onChanged(@Nullable List<Event> events) {
+                            if (authorization!=null ){
+
+//                    eventViewModel.newUpdateEventsOnline(events,authorization.access_token);
+
+
+                                if (events!=null && events.size()!=0){
+                                    eventViewModel.newUpdateEventsOnline(events,authorization.access_token);
+                                }else{
+                                    eventViewModel.getEventsOnline(authorization.access_token);
+                                }
+
+                            }else{
+
+                                Toast.makeText(getActivity(),"Unable to sync your events with online content",Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+//                    loadCategories(authorization);
+                }
+            }
+        });
 
 //        updateEventsData();
 //        eventViewModel.mAuth.observe(this, new Observer<Authorization>() {

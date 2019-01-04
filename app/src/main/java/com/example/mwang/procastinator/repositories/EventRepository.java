@@ -65,6 +65,9 @@ public class EventRepository {
         call.enqueue(new Callback<List<Event>>() {
             @Override
             public void onResponse(Call<List<Event>> call, Response<List<Event>> response) {
+
+                monitor.postValue(new NetworkResponse(false,"Events synced with online data",response.code()));
+
                 if (response.body()!=null){
 
                     for (Event event:response.body()){
@@ -78,6 +81,12 @@ public class EventRepository {
             @Override
             public void onFailure(Call<List<Event>> call, Throwable t) {
 
+
+                try{
+                    monitor.postValue(new NetworkResponse(false,"Check your internet connection for the information to be updated online",((HttpException) t).code()));
+                }catch (Exception e){
+                    monitor.postValue(new NetworkResponse(false,"Check your internet connection for the information to be updated online",0));
+                }
             }
         });
 
@@ -89,6 +98,8 @@ public class EventRepository {
         call.enqueue(new Callback<Event>() {
             @Override
             public void onResponse(Call<Event> call, Response<Event> response) {
+                monitor.postValue(new NetworkResponse(false,"Events changed online",response.code()));
+
                 if (response.body()!=null){
                     eventsDao.insert(response.body());
 
@@ -97,7 +108,11 @@ public class EventRepository {
 
             @Override
             public void onFailure(Call<Event> call, Throwable t) {
-
+                try{
+                    monitor.postValue(new NetworkResponse(false,"Check your internet connection for the information to be updated online",((HttpException) t).code()));
+                }catch (Exception e){
+                    monitor.postValue(new NetworkResponse(false,"Check your internet connection for the information to be updated online",0));
+                }
             }
         });
     }
@@ -115,17 +130,20 @@ public class EventRepository {
         try {
             for (Event event : eventUpdateList) {
                 array.put(event.getJsonObject());
+
+//                Log.e("ererer",event.reminder_time);
             }
         } catch (JSONException e) {
             Log.e("JSON", e.getMessage());
         }
+
             Call<JSONObject> call=CoreUtils.getAuthRetrofitClient(access_token).create(EventService.class).updateEvents(array);
             call.enqueue(new Callback<JSONObject>() {
                 @Override
                 public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
                     monitor.postValue(new NetworkResponse(false,"Events updated online",response.code()));
 
-                    Log.e("ererer",response.body().toString());
+//                    Log.e("ererer",response.body().toString());
 
                     //delete the records that are unsynced and un updated as they have already been updated here and get the updated data online
 
@@ -137,7 +155,7 @@ public class EventRepository {
                 @Override
                 public void onFailure(Call<JSONObject> call, Throwable t) {
 
-                    Log.e("ererer","error");
+//                    Log.e("ererer","error");
                     try{
                         monitor.postValue(new NetworkResponse(false,"Check your internet connection for the information to be updated online",((HttpException) t).code()));
                     }catch (Exception e){
@@ -164,6 +182,8 @@ public class EventRepository {
         call.enqueue(new Callback<List<Event>>() {
             @Override
             public void onResponse(Call<List<Event>> call, Response<List<Event>> response) {
+                monitor.postValue(new NetworkResponse(false,"Events deleted online",response.code()));
+
                 //delete the event locally
                 eventsDao.deleteUsingId(event_ider);
 
@@ -177,7 +197,11 @@ public class EventRepository {
 
             @Override
             public void onFailure(Call<List<Event>> call, Throwable t) {
-
+                try{
+                    monitor.postValue(new NetworkResponse(false,"Check your internet connection for the information to be updated online",((HttpException) t).code()));
+                }catch (Exception e){
+                    monitor.postValue(new NetworkResponse(false,"Check your internet connection for the information to be updated online",0));
+                }
             }
         });
 

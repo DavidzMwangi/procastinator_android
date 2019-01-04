@@ -34,7 +34,9 @@ import java.util.TimeZone;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class AllEventsAdapter extends RecyclerView.Adapter<AllEventsAdapter.EventsViewHolder> {
+
+
+public class AllEventsAdapter extends  RecyclerView.Adapter<AllEventsAdapter.EventsViewHolder> {
        private Context context;
       private   List<Event> events;
         private AllEventsAdapterInterface allEventsAdapterInterface;

@@ -58,6 +58,12 @@
             android:background="@color/text_shadow_white"
             android:orientation="vertical">
 
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:id="@+id/login_pr"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -116,6 +122,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Sign In"
+                android:background="@drawable/rounded_edit_text"
+                android:backgroundTint="@color/colorAccent"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
                 android:layout_gravity="center"
                 android:id="@+id/sign_btn"/>
