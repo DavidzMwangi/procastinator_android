@@ -239,8 +239,6 @@ public class MainActivity extends AppCompatActivity
                 MainActivity.out.postValue(true);
             }catch (Exception e){
 
-
-
             }
 
 
