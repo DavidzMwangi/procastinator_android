@@ -131,7 +131,6 @@ public class EventRepository {
             for (Event event : eventUpdateList) {
                 array.put(event.getJsonObject());
 
-//                Log.e("ererer",event.reminder_time);
             }
         } catch (JSONException e) {
             Log.e("JSON", e.getMessage());
@@ -143,7 +142,6 @@ public class EventRepository {
                 public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
                     monitor.postValue(new NetworkResponse(false,"Events updated online",response.code()));
 
-//                    Log.e("ererer",response.body().toString());
 
                     //delete the records that are unsynced and un updated as they have already been updated here and get the updated data online
 
@@ -155,7 +153,6 @@ public class EventRepository {
                 @Override
                 public void onFailure(Call<JSONObject> call, Throwable t) {
 
-//                    Log.e("ererer","error");
                     try{
                         monitor.postValue(new NetworkResponse(false,"Check your internet connection for the information to be updated online",((HttpException) t).code()));
                     }catch (Exception e){
