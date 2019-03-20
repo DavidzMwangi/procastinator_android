@@ -37,6 +37,7 @@ public class EventPagerAdapter extends FragmentStatePagerAdapter {
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
+
         return titles.get(position);
     }
 }
